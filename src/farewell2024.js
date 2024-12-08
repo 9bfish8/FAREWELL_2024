@@ -138,50 +138,26 @@ const Farewell2024 = () => {
         const shareMessage =
             `${themeEmoji} ${cardState.to}님께\n${cardState.from}님이 크리스마스 카드를 보냈습니다!\n\n아래 링크를 눌러 카드를 확인해보세요:\n${shortUrl}`;
 
-        // iOS의 경우 textarea를 사용한 복사
-        if (navigator.userAgent.match(/ipad|iphone/i)) {
-            const textarea = document.createElement('textarea');
-            textarea.value = shareMessage;
-            textarea.contentEditable = true;
-            textarea.readOnly = false;
-            textarea.style.position = 'fixed';
-            textarea.style.left = '-9999px';
+        // 가장 기본적인 복사 방법
+        const input = document.createElement('input');
+        input.setAttribute('value', shareMessage);
+        input.setAttribute('readonly', '');
+        input.style.position = 'absolute';
+        input.style.left = '-9999px';
+        document.body.appendChild(input);
+        input.focus();
+        input.select();
+        input.setSelectionRange(0, 99999); // 모바일을 위한 범위 선택
 
-            document.body.appendChild(textarea);
-
-            const selection = document.getSelection();
-            const range = document.createRange();
-            range.selectNodeContents(textarea);
-            selection.removeAllRanges();
-            selection.addRange(range);
-
-            textarea.setSelectionRange(0, textarea.value.length);
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            alert('메시지가 복사되었습니다!');
-            return;
-        }
-
-        // 다른 모바일 기기의 경우 Clipboard API 사용
         try {
-            await navigator.clipboard.writeText(shareMessage);
-            alert('메시지가 복사되었습니다!');
+            document.execCommand('copy');
+            alert('메시지가 복사되었습니다!\n카카오톡이나 메시지 앱에 붙여넣기 하세요.');
         } catch (err) {
-            console.error('Failed to copy:', err);
-            // 마지막 수단으로 execCommand 사용
-            const textarea = document.createElement('textarea');
-            textarea.value = shareMessage;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                alert('메시지가 복사되었습니다!');
-            } catch (e) {
-                alert('복사에 실패했습니다. 다시 시도해주세요.');
-            }
-            document.body.removeChild(textarea);
+            alert('죄송합니다. 복사에 실패했습니다.');
+            console.error('복사 실패:', err);
         }
+
+        document.body.removeChild(input);
     };
 
     const handleKakaoShare = async () => {
