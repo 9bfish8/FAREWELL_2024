@@ -114,21 +114,48 @@ const Farewell2024 = () => {
             template: cardState.template
         });
 
-        const shareData = {
-            title: '2024 크리스마스 카드',
-            text: `${cardState.to}님께 크리스마스 카드가 도착했습니다!`,
-            url: `${window.location.origin}${window.location.pathname}?${params.toString()}`
-        };
+        const longUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+
+        // TinyURL을 사용하여 URL 단축
+        let shortUrl;
+        try {
+            const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+            if (!response.ok) throw new Error('Failed to shorten URL');
+            shortUrl = await response.text();
+        } catch (error) {
+            console.error('Error shortening URL:', error);
+            shortUrl = longUrl; // 실패시 원본 URL 사용
+        }
+
+        // 테마별 이모지 설정
+        const themeEmoji = {
+            classic: '🎄',
+            snow: '❄️',
+            golden: '✨'
+        }[cardState.template];
+
+        // 공유 메시지 생성
+        const shareMessage =
+            `${themeEmoji} ${cardState.to}님께
+${cardState.from}님이 크리스마스 카드를 보냈습니다!
+
+아래 링크를 눌러 카드를 확인해보세요:
+${shortUrl}`;
 
         try {
             if (navigator.share) {
-                await navigator.share(shareData);
+                await navigator.share({
+                    title: '크리스마스 카드가 도착했습니다! 🎄',
+                    text: shareMessage,
+                    url: shortUrl
+                });
             } else {
-                await navigator.clipboard.writeText(shareData.url);
-                alert('링크가 복사되었습니다!');
+                await navigator.clipboard.writeText(shareMessage);
+                alert('메시지와 링크가 클립보드에 복사되었습니다!');
             }
         } catch (err) {
-            console.log('Error sharing:', err);
+            console.error('Error sharing:', err);
+            alert('공유 중 문제가 발생했습니다. 다시 시도해주세요.');
         }
     };
 
