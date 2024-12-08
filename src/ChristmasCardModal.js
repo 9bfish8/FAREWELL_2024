@@ -100,22 +100,18 @@ const ChristmasCardModal = ({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-            <div
-                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-                onClick={!isReadMode ? onClose : undefined}
-            />
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
             <div
                 className={`${template.bgClass} p-6 rounded-2xl w-full max-w-md relative z-10 shadow-xl`}
                 onClick={(e) => e.stopPropagation()}
             >
-                {!isReadMode && (
-                    <button
-                        onClick={onClose}
-                        className="absolute right-4 top-4 text-gray-600 hover:text-gray-800 transition-colors"
-                    >
-                        <X className="w-6 h-6" />
-                    </button>
-                )}
+                {/* 항상 닫기 버튼을 보여주도록 수정 */}
+                <button
+                    onClick={onClose}
+                    className="absolute right-4 top-4 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                    <X className="w-6 h-6" />
+                </button>
 
                 {isReadMode ? (
                     <div className={`space-y-4 ${isOpened ? 'animate-fade-in' : ''}`}>
@@ -137,11 +133,19 @@ const ChristmasCardModal = ({
                                 카드 열어보기
                             </button>
                         ) : (
-                            <div className={`bg-white/80 p-4 rounded-lg ${template.openAnimation}`}>
-                                <p className="text-gray-800 whitespace-pre-line">
-                                    {cardState.message}
-                                </p>
-                            </div>
+                            <>
+                                <div className={`bg-white/80 p-4 rounded-lg ${template.openAnimation}`}>
+                                    <p className="text-gray-800 whitespace-pre-line">
+                                        {cardState.message}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={onClose}
+                                    className={`w-full ${template.buttonClass} text-white py-2 rounded-lg mt-4 transition-colors`}
+                                >
+                                    닫기
+                                </button>
+                            </>
                         )}
                     </div>
                 ) : (
@@ -197,7 +201,6 @@ const ChristmasCardModal = ({
                                 placeholder="보내는 분 이름을 입력하세요"
                             />
                         </div>
-                        {/* 폼의 마지막 버튼 부분을 이렇게 수정 */}
                         <div className="space-y-2">
                             <button
                                 type="button"
