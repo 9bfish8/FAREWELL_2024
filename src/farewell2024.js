@@ -136,38 +136,51 @@ const Farewell2024 = () => {
 
         // 공유 메시지 생성
         const shareMessage =
-            `${themeEmoji} ${cardState.to}님께
-${cardState.from}님이 크리스마스 카드를 보냈습니다!
+            `${themeEmoji} ${cardState.to}님께\n${cardState.from}님이 크리스마스 카드를 보냈습니다!\n\n아래 링크를 눌러 카드를 확인해보세요:\n${shortUrl}`;
 
-아래 링크를 눌러 카드를 확인해보세요:
-${shortUrl}`;
-
-        try {
-            // 먼저 기본 클립보드 API 시도
-            await navigator.clipboard.writeText(shareMessage);
-            alert('메시지와 링크가 클립보드에 복사되었습니다!');
-        } catch (err) {
-            // 실패하면 fallback 방식 사용
+        // iOS의 경우 textarea를 사용한 복사
+        if (navigator.userAgent.match(/ipad|iphone/i)) {
             const textarea = document.createElement('textarea');
             textarea.value = shareMessage;
+            textarea.contentEditable = true;
+            textarea.readOnly = false;
             textarea.style.position = 'fixed';
-            textarea.style.left = '0';
-            textarea.style.top = '0';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
+            textarea.style.left = '-9999px';
 
+            document.body.appendChild(textarea);
+
+            const selection = document.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(textarea);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            textarea.setSelectionRange(0, textarea.value.length);
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            alert('메시지가 복사되었습니다!');
+            return;
+        }
+
+        // 다른 모바일 기기의 경우 Clipboard API 사용
+        try {
+            await navigator.clipboard.writeText(shareMessage);
+            alert('메시지가 복사되었습니다!');
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            // 마지막 수단으로 execCommand 사용
+            const textarea = document.createElement('textarea');
+            textarea.value = shareMessage;
+            document.body.appendChild(textarea);
+            textarea.select();
             try {
                 document.execCommand('copy');
-                textarea.remove();
-                alert('메시지와 링크가 클립보드에 복사되었습니다!');
-            } catch (err) {
-                console.error('Fallback error:', err);
-                textarea.remove();
-                // 사용자가 직접 선택할 수 있도록 메시지 표시
-                alert(`복사에 실패했습니다. 아래 텍스트를 길게 눌러 직접 복사해주세요:\n\n${shareMessage}`);
+                alert('메시지가 복사되었습니다!');
+            } catch (e) {
+                alert('복사에 실패했습니다. 다시 시도해주세요.');
             }
+            document.body.removeChild(textarea);
         }
     };
 
