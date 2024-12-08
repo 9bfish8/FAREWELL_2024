@@ -105,7 +105,7 @@ const Farewell2024 = () => {
         }
     };
 
-    const shareCard = async () => {
+    const handleCopyLink = async () => {
         const params = new URLSearchParams({
             card: 'true',
             to: cardState.to,
@@ -124,7 +124,7 @@ const Farewell2024 = () => {
             shortUrl = await response.text();
         } catch (error) {
             console.error('Error shortening URL:', error);
-            shortUrl = longUrl; // 실패시 원본 URL 사용
+            shortUrl = longUrl;
         }
 
         // 테마별 이모지 설정
@@ -143,19 +143,50 @@ ${cardState.from}님이 크리스마스 카드를 보냈습니다!
 ${shortUrl}`;
 
         try {
-            if (navigator.share) {
-                await navigator.share({
+            await navigator.clipboard.writeText(shareMessage);
+            alert('메시지와 링크가 클립보드에 복사되었습니다!');
+        } catch (err) {
+            console.error('Error copying:', err);
+            alert('복사 중 문제가 발생했습니다. 다시 시도해주세요.');
+        }
+    };
+
+    const handleKakaoShare = async () => {
+        const params = new URLSearchParams({
+            card: 'true',
+            to: cardState.to,
+            message: encodeURIComponent(cardState.message),
+            from: cardState.from,
+            template: cardState.template
+        });
+
+        const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+
+        try {
+            await window.Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
                     title: '크리스마스 카드가 도착했습니다! 🎄',
-                    text: shareMessage,
-                    url: shortUrl
-                });
-            } else {
-                await navigator.clipboard.writeText(shareMessage);
-                alert('메시지와 링크가 클립보드에 복사되었습니다!');
-            }
+                    description: `${cardState.to}님께\n${cardState.from}님이 따뜻한 마음을 담아 보냈습니다.`,
+                    imageUrl: `${window.location.origin}/img.png`,
+                    link: {
+                        mobileWebUrl: shareUrl,
+                        webUrl: shareUrl,
+                    },
+                },
+                buttons: [
+                    {
+                        title: '카드 확인하기',
+                        link: {
+                            mobileWebUrl: shareUrl,
+                            webUrl: shareUrl,
+                        },
+                    },
+                ],
+            });
         } catch (err) {
             console.error('Error sharing:', err);
-            alert('공유 중 문제가 발생했습니다. 다시 시도해주세요.');
+            alert('카카오톡 공유 중 문제가 발생했습니다. 다시 시도해주세요.');
         }
     };
 
@@ -270,7 +301,8 @@ ${shortUrl}`;
                 <ChristmasCardModal
                     cardState={cardState}
                     handleCardInput={handleCardInput}
-                    shareCard={shareCard}
+                    handleKakaoShare={handleKakaoShare}
+                    handleCopyLink={handleCopyLink}
                     onClose={() => handleCardInput('showModal', false)}
                 />
             )}

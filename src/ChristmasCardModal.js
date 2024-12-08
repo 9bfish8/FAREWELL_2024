@@ -34,7 +34,14 @@ const CARD_TEMPLATES = {
     },
 };
 
-const ChristmasCardModal = ({ cardState, handleCardInput, shareCard, onClose }) => {
+const ChristmasCardModal = ({
+                                cardState,
+                                handleCardInput,
+                                handleKakaoShare,
+                                shareCard,
+                                handleCopyLink,
+                                onClose
+                            }) => {
     const [isReadMode, setIsReadMode] = useState(false);
     const [isShared, setIsShared] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -190,14 +197,35 @@ const ChristmasCardModal = ({ cardState, handleCardInput, shareCard, onClose }) 
                                 placeholder="보내는 분 이름을 입력하세요"
                             />
                         </div>
-                        <button
-                            type="submit"
-                            disabled={!cardState.to || !cardState.message || !cardState.from}
-                            className={`w-full ${template.buttonClass} disabled:bg-gray-400 text-white py-2 rounded-lg flex items-center justify-center gap-2 transition-colors`}
-                        >
-                            <Share2 className="w-5 h-5"/>
-                            카드 공유하기
-                        </button>
+                        {/* 폼의 마지막 버튼 부분을 이렇게 수정 */}
+                        <div className="space-y-2">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    handleKakaoShare();
+                                    setShowSuccessModal(true);
+                                }}
+                                disabled={!cardState.to || !cardState.message || !cardState.from}
+                                className="w-full bg-[#FEE500] hover:bg-[#FDD835] disabled:bg-gray-400 disabled:hover:bg-gray-400 text-[#391B1B] py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                            >
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                                    <path d="M12 3C6.48 3 2 6.48 2 12c0 3.96 2.88 7.24 6.67 7.85v-5.51H6.75V12h1.92V9.85c0-1.89 1.13-2.94 2.86-2.94.82 0 1.68.15 1.68.15v1.84h-.95c-.93 0-1.22.58-1.22 1.17V12h2.08l-.33 2.34h-1.75v5.51C19.12 19.24 22 15.96 22 12c0-5.52-4.48-10-10-10z"/>
+                                </svg>
+                                카카오톡으로 공유하기
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    handleCopyLink();
+                                    setShowSuccessModal(true);
+                                }}
+                                disabled={!cardState.to || !cardState.message || !cardState.from}
+                                className={`w-full ${template.buttonClass} disabled:bg-gray-400 text-white py-2 rounded-lg flex items-center justify-center gap-2`}
+                            >
+                                <Share2 className="w-5 h-5"/>
+                                링크 복사하기
+                            </button>
+                        </div>
                     </form>
                 )}
             </div>
