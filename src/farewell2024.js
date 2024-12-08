@@ -127,33 +127,22 @@ const Farewell2024 = () => {
             shortUrl = longUrl;
         }
 
-        // 테마별 이모지 설정
-        const themeEmoji = {
-            classic: '🎄',
-            snow: '❄️',
-            golden: '✨'
-        }[cardState.template];
-
-        // 공유 메시지 생성
-        const shareMessage =
-            `${themeEmoji} ${cardState.to}님께\n${cardState.from}님이 크리스마스 카드를 보냈습니다!\n\n아래 링크를 눌러 카드를 확인해보세요:\n${shortUrl}`;
-
-        // 가장 기본적인 복사 방법
+        // input 엘리먼트 생성 및 URL만 복사
         const input = document.createElement('input');
-        input.setAttribute('value', shareMessage);
-        input.setAttribute('readonly', '');
-        input.style.position = 'absolute';
-        input.style.left = '-9999px';
+        input.value = shortUrl;  // URL만 복사
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        input.style.top = '0';
+        input.style.left = '0';
+
         document.body.appendChild(input);
-        input.focus();
         input.select();
-        input.setSelectionRange(0, 99999); // 모바일을 위한 범위 선택
 
         try {
             document.execCommand('copy');
-            alert('메시지가 복사되었습니다!\n카카오톡이나 메시지 앱에 붙여넣기 하세요.');
+            alert('링크가 복사되었습니다!');
         } catch (err) {
-            alert('죄송합니다. 복사에 실패했습니다.');
+            alert('링크 복사에 실패했습니다.');
             console.error('복사 실패:', err);
         }
 
