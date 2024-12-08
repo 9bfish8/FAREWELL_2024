@@ -204,8 +204,7 @@ const ChristmasCardModal = ({
                         <div className="space-y-2">
                             <button
                                 type="button"
-                                onClick={async () => {
-                                    await shareCard(); // 먼저 shareCard를 실행
+                                onClick={() => {
                                     handleKakaoShare();
                                     setShowSuccessModal(true);
                                 }}
@@ -213,15 +212,13 @@ const ChristmasCardModal = ({
                                 className="w-full bg-[#FEE500] hover:bg-[#FDD835] disabled:bg-gray-400 disabled:hover:bg-gray-400 text-[#391B1B] py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
                             >
                                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                                    <path
-                                        d="M12 3C6.48 3 2 6.48 2 12c0 3.96 2.88 7.24 6.67 7.85v-5.51H6.75V12h1.92V9.85c0-1.89 1.13-2.94 2.86-2.94.82 0 1.68.15 1.68.15v1.84h-.95c-.93 0-1.22.58-1.22 1.17V12h2.08l-.33 2.34h-1.75v5.51C19.12 19.24 22 15.96 22 12c0-5.52-4.48-10-10-10z"/>
+                                    <path d="M12 3C6.48 3 2 6.48 2 12c0 3.96 2.88 7.24 6.67 7.85v-5.51H6.75V12h1.92V9.85c0-1.89 1.13-2.94 2.86-2.94.82 0 1.68.15 1.68.15v1.84h-.95c-.93 0-1.22.58-1.22 1.17V12h2.08l-.33 2.34h-1.75v5.51C19.12 19.24 22 15.96 22 12c0-5.52-4.48-10-10-10z"/>
                                 </svg>
                                 카카오톡으로 공유하기
                             </button>
                             <button
                                 type="button"
-                                onClick={async () => {
-                                    await shareCard(); // 먼저 shareCard를 실행
+                                onClick={() => {
                                     handleCopyLink();
                                     setShowSuccessModal(true);
                                 }}
@@ -237,69 +234,32 @@ const ChristmasCardModal = ({
             </div>
             <style jsx>{`
                 @keyframes tree-reveal {
-                    0% {
-                        transform: scale(0.8);
-                        opacity: 0;
-                    }
-                    50% {
-                        transform: scale(1.2);
-                    }
-                    100% {
-                        transform: scale(1);
-                        opacity: 1;
-                    }
+                    0% { transform: scale(0.8); opacity: 0; }
+                    50% { transform: scale(1.2); }
+                    100% { transform: scale(1); opacity: 1; }
                 }
-
+                
                 @keyframes snow-reveal {
-                    0% {
-                        transform: translateY(-20px);
-                        opacity: 0;
-                    }
-                    50% {
-                        transform: translateY(10px);
-                    }
-                    100% {
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
+                    0% { transform: translateY(-20px); opacity: 0; }
+                    50% { transform: translateY(10px); }
+                    100% { transform: translateY(0); opacity: 1; }
                 }
-
+                
                 @keyframes sparkle-reveal {
-                    0% {
-                        transform: rotate(-180deg) scale(0);
-                        opacity: 0;
-                    }
-                    50% {
-                        transform: rotate(20deg) scale(1.2);
-                    }
-                    100% {
-                        transform: rotate(0) scale(1);
-                        opacity: 1;
-                    }
+                    0% { transform: rotate(-180deg) scale(0); opacity: 0; }
+                    50% { transform: rotate(20deg) scale(1.2); }
+                    100% { transform: rotate(0) scale(1); opacity: 1; }
                 }
 
                 @keyframes tree-receive {
-                    0% {
-                        transform: translateY(50px) rotate(-10deg);
-                        opacity: 0;
-                    }
-                    60% {
-                        transform: translateY(-20px) rotate(5deg);
-                        opacity: 1;
-                    }
-                    80% {
-                        transform: translateY(10px) rotate(-3deg);
-                    }
-                    100% {
-                        transform: translateY(0) rotate(0);
-                    }
+                    0% { transform: translateY(50px) rotate(-10deg); opacity: 0; }
+                    60% { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+                    80% { transform: translateY(10px) rotate(-3deg); }
+                    100% { transform: translateY(0) rotate(0); }
                 }
-
+                
                 @keyframes snow-receive {
-                    0% {
-                        transform: translateY(-50px) scale(0.8);
-                        opacity: 0;
-                    }
+                    0% { transform: translateY(-50px) scale(0.8); opacity: 0; }
                     50% { transform: translateY(20px) scale(1.1); opacity: 0.5; }
                     75% { transform: translateY(-10px) scale(0.95); opacity: 0.8; }
                     100% { transform: translateY(0) scale(1); opacity: 1; }
