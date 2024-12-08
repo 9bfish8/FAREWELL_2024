@@ -143,11 +143,31 @@ ${cardState.from}님이 크리스마스 카드를 보냈습니다!
 ${shortUrl}`;
 
         try {
+            // 먼저 기본 클립보드 API 시도
             await navigator.clipboard.writeText(shareMessage);
             alert('메시지와 링크가 클립보드에 복사되었습니다!');
         } catch (err) {
-            console.error('Error copying:', err);
-            alert('복사 중 문제가 발생했습니다. 다시 시도해주세요.');
+            // 실패하면 fallback 방식 사용
+            const textarea = document.createElement('textarea');
+            textarea.value = shareMessage;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '0';
+            textarea.style.top = '0';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                textarea.remove();
+                alert('메시지와 링크가 클립보드에 복사되었습니다!');
+            } catch (err) {
+                console.error('Fallback error:', err);
+                textarea.remove();
+                // 사용자가 직접 선택할 수 있도록 메시지 표시
+                alert(`복사에 실패했습니다. 아래 텍스트를 길게 눌러 직접 복사해주세요:\n\n${shareMessage}`);
+            }
         }
     };
 
