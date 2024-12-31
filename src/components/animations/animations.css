@@ -1,0 +1,126 @@
+/* animations.css */
+@keyframes firework-rise {
+    0% { transform: translateY(100vh); }
+    50% { transform: translateY(30vh); opacity: 1; }
+    50.1% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+@keyframes sparkle-fade {
+    0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes shooting {
+    0% {
+        transform: translate(0, 0) rotate(var(--angle));
+        opacity: 1;
+    }
+    100% {
+        transform: translate(200px, 200px) rotate(var(--angle));
+        opacity: 0;
+    }
+}
+
+@keyframes rainbow-pulse {
+    0%, 100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+    50% { background-position: 100% 50%; filter: hue-rotate(180deg); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* 폭죽 효과 */
+.firework {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    animation: firework-rise 2s ease-out;
+}
+
+.firework::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle,
+    hsl(var(--hue), 100%, 75%),
+    hsl(var(--hue), 100%, 65%) 10%,
+    transparent 60%
+    );
+    border-radius: 50%;
+    animation: firework-burst 1s ease-out forwards;
+    animation-delay: 1s;
+    transform-origin: center;
+    opacity: 0;
+    box-shadow:
+            0 0 10px hsl(var(--hue), 100%, 75%),
+            0 0 20px hsl(var(--hue), 100%, 65%),
+            0 0 30px hsl(var(--hue), 100%, 55%);
+}
+
+/* 반짝이 효과 */
+.sparkle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: transparent;
+    animation: sparkle-fade 1.5s ease-in-out infinite;
+}
+
+.sparkle::before, .sparkle::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 50%;
+    filter: blur(2px);
+    opacity: 0.8;
+}
+
+/* 별똥별 효과 */
+.shooting-star {
+    position: absolute;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0) 100%);
+    animation: shooting 2s linear infinite;
+    box-shadow:
+            0 0 10px #fff,
+            0 0 20px #fff,
+            0 0 30px rgba(255, 255, 255, 0.5);
+    border-radius: 100px;
+    opacity: 0.7;
+}
+
+/* 텍스트 효과 */
+.animate-rainbow-text {
+    background-size: 200% 200%;
+    animation: rainbow-pulse 4s ease infinite;
+}
+
+.animate-bounce-in {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* 메시지 컨테이너 */
+.message-container {
+    backdrop-filter: blur(8px);
+    background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.05)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 20px;
+    padding: 2rem;
+}
